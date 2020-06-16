@@ -2099,6 +2099,15 @@ public final class LineageSettings {
                 sAlwaysTrueValidator;
 
         /**
+         * List of apps to force dark mode.
+         */
+        public static final String FORCE_DARK_APPS = "force_dark_apps";
+
+        /** @hide */
+        public static final Validator FORCE_DARK_APPS_VALIDATOR =
+                sAlwaysTrueValidator;
+
+        /**
          * Force show navigation bar setting.
          * @hide
          */
@@ -2393,6 +2402,8 @@ public final class LineageSettings {
                     DISPLAY_PICTURE_ADJUSTMENT_VALIDATOR);
             VALIDATORS.put(LONG_SCREEN_APPS,
                     LONG_SCREEN_APPS_VALIDATOR);
+            VALIDATORS.put(FORCE_DARK_APPS,
+                    FORCE_DARK_APPS_VALIDATOR);
             VALIDATORS.put(FORCE_SHOW_NAVBAR,
                     FORCE_SHOW_NAVBAR_VALIDATOR);
             VALIDATORS.put(CLICK_PARTIAL_SCREENSHOT,
