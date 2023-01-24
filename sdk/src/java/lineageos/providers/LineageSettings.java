@@ -3130,6 +3130,19 @@ public final class LineageSettings {
                 new InclusiveIntegerRangeValidator(0, 3);
 
         /**
+         * Network traffic indicator position
+         * 0 = Start side
+         * 1 = Center
+         * 2 = End side
+         * @hide
+         */
+        public static final String NETWORK_TRAFFIC_POSITION = "network_traffic_position";
+
+        /** @hide */
+        public static final Validator NETWORK_TRAFFIC_POSITION_VALIDATOR =
+                new InclusiveIntegerRangeValidator(0, 2);
+
+        /**
          * Whether or not to hide the network traffic indicator when there is no activity
          * @hide
          */
@@ -3320,6 +3333,7 @@ public final class LineageSettings {
             VALIDATORS.put(PROTECTED_COMPONENTS, PROTECTED_COMPONENTS_VALIDATOR);
             VALIDATORS.put(PROTECTED_COMPONENT_MANAGERS, PROTECTED_COMPONENTS_MANAGER_VALIDATOR);
             VALIDATORS.put(NETWORK_TRAFFIC_MODE, NETWORK_TRAFFIC_MODE_VALIDATOR);
+            VALIDATORS.put(NETWORK_TRAFFIC_POSITION, NETWORK_TRAFFIC_POSITION_VALIDATOR);
             VALIDATORS.put(NETWORK_TRAFFIC_AUTOHIDE, NETWORK_TRAFFIC_AUTOHIDE_VALIDATOR);
             VALIDATORS.put(NETWORK_TRAFFIC_UNITS, NETWORK_TRAFFIC_UNITS_VALIDATOR);
             VALIDATORS.put(NETWORK_TRAFFIC_SHOW_UNITS, NETWORK_TRAFFIC_SHOW_UNITS_VALIDATOR);

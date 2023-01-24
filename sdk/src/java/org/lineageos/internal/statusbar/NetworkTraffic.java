@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017-2020 The LineageOS project
+ * Copyright (C) 2017-2023 The LineageOS project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,6 +63,10 @@ public class NetworkTraffic extends TextView {
     private static final int MODE_DOWNSTREAM_ONLY = 2;
     private static final int MODE_UPSTREAM_AND_DOWNSTREAM = 3;
 
+    private static final int POSITION_START = 0;
+    private static final int POSITION_CENTER = 1;
+    private static final int POSITION_END = 2;
+
     private static final int MESSAGE_TYPE_PERIODIC_REFRESH = 0;
     private static final int MESSAGE_TYPE_UPDATE_VIEW = 1;
     private static final int MESSAGE_TYPE_ADD_NETWORK = 2;
@@ -82,6 +86,8 @@ public class NetworkTraffic extends TextView {
     private static final long AUTOHIDE_THRESHOLD_MEGABYTES = 80;
 
     private int mMode = MODE_DISABLED;
+    private int mPosition = POSITION_CENTER;
+    private int mViewPosition = -1;
     private boolean mNetworkTrafficIsVisible;
     private long mTxKbps;
     private long mRxKbps;
@@ -137,6 +143,10 @@ public class NetworkTraffic extends TextView {
                 .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN)
                 .build();
         mConnectivityManager.registerNetworkCallback(request, mNetworkCallback);
+    }
+
+    public void setViewPosition(int vpos) {
+        mViewPosition = vpos;
     }
 
     private LineageStatusBarItem.DarkReceiver mDarkReceiver =
@@ -264,7 +274,8 @@ public class NetworkTraffic extends TextView {
         }
 
         private void displayStatsAndReschedule() {
-            final boolean enabled = mMode != MODE_DISABLED && isConnectionAvailable();
+                final boolean enabled = mMode != MODE_DISABLED && mPosition == mViewPosition
+                        && isConnectionAvailable();
             final boolean showUpstream =
                     mMode == MODE_UPSTREAM_ONLY || mMode == MODE_UPSTREAM_AND_DOWNSTREAM;
             final boolean showDownstream =
@@ -367,6 +378,9 @@ public class NetworkTraffic extends TextView {
                     LineageSettings.Secure.NETWORK_TRAFFIC_MODE),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(LineageSettings.Secure.getUriFor(
+                    LineageSettings.Secure.NETWORK_TRAFFIC_POSITION),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(LineageSettings.Secure.getUriFor(
                     LineageSettings.Secure.NETWORK_TRAFFIC_AUTOHIDE),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(LineageSettings.Secure.getUriFor(
@@ -437,6 +451,8 @@ public class NetworkTraffic extends TextView {
 
         mMode = LineageSettings.Secure.getIntForUser(resolver,
                 LineageSettings.Secure.NETWORK_TRAFFIC_MODE, 0, UserHandle.USER_CURRENT);
+        mPosition = LineageSettings.Secure.getIntForUser(resolver,
+                LineageSettings.Secure.NETWORK_TRAFFIC_POSITION, POSITION_CENTER, UserHandle.USER_CURRENT);
         mAutoHide = LineageSettings.Secure.getIntForUser(resolver,
                 LineageSettings.Secure.NETWORK_TRAFFIC_AUTOHIDE, 0, UserHandle.USER_CURRENT) == 1;
         mUnits = LineageSettings.Secure.getIntForUser(resolver,
